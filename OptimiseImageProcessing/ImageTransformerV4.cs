@@ -69,6 +69,9 @@ namespace OptimiseImageProcessing
 
             borrowedStream.Position = 0L;
 
+            MagicImageProcessor.EnableSimd = false;
+            MagicImageProcessor.EnablePlanarPipeline = true;
+
             using (borrowedStream)
             {
                 // upload scaledImage to AWS S3
@@ -85,7 +88,6 @@ namespace OptimiseImageProcessing
                         HybridMode = HybridScaleMode.Turbo
                     });
                 }
-
             }
         }
     }
