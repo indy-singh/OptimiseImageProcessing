@@ -7,27 +7,25 @@ namespace OptimiseImageProcessing
 {
     /// <summary>
     /// Stats:-
-    ///     Took: 297 ms
-    ///     Allocated: 20,740 kb
-    ///     Peak Working Set: 34,700 kb
-    ///     Gen 0 collections: 4
-    ///     Gen 1 collections: 1
-    ///     Gen 2 collections: 0
+    ///     Took: 2,313 ms
+    ///     Allocated: 137,277 kb
+    ///     Peak Working Set: 36,060 kb
+    ///     Gen 0 collections: 32
+    ///     Gen 1 collections: 2
+    ///     Gen 2 collections: 1
     ///
     /// dotTrace:-
-    ///     Total RAM: 22 MB
-    ///     SOH:       19 MB
+    ///     Total RAM: 165 MB
+    ///     SOH:       162 MB
     ///     LOH:       2.8 MB
     /// </summary>
     public class ImageTransformerV4 : IImageTransformer
     {
         private readonly RecyclableMemoryStreamManager _streamManager;
-        private bool _written;
 
         public ImageTransformerV4()
         {
             _streamManager = new RecyclableMemoryStreamManager();
-            _written = false;
         }
 
         public void Transform(string url)
@@ -59,7 +57,7 @@ namespace OptimiseImageProcessing
                 }
                 else
                 {
-                    bufferSize = (int) response.ContentLength;
+                    bufferSize = (int)response.ContentLength;
                 }
 
                 // close the http response stream asap, we only need the contents, we don't need to keep it open
@@ -74,23 +72,19 @@ namespace OptimiseImageProcessing
             using (borrowedStream)
             {
                 // upload scaledImage to AWS S3
-               
-                if (_written == false)
-                {
-                    using (var fileStream = File.Create(@"..\..\v4.jpg"))
-                    {
-                        MagicImageProcessor.ProcessImage(borrowedStream, fileStream, new ProcessImageSettings()
-                        {
-                            Width = 320,
-                            Height = 240,
-                            ResizeMode = CropScaleMode.Max,
-                            SaveFormat = FileFormat.Jpeg,
-                            JpegQuality = 70,
-                        });
-                    }
 
-                    _written = true;
+                using (var fileStream = File.Create(@"..\..\v4.jpg"))
+                {
+                    MagicImageProcessor.ProcessImage(borrowedStream, fileStream, new ProcessImageSettings()
+                    {
+                        Width = 320,
+                        Height = 240,
+                        ResizeMode = CropScaleMode.Max,
+                        SaveFormat = FileFormat.Jpeg,
+                        JpegQuality = 70,
+                    });
                 }
+
             }
         }
     }

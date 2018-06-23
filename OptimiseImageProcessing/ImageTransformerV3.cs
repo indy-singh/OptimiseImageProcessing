@@ -23,12 +23,10 @@ namespace OptimiseImageProcessing
     public class ImageTransformerV3 : IImageTransformer
     {
         private readonly RecyclableMemoryStreamManager _streamManager;
-        private bool _written;
 
         public ImageTransformerV3()
         {
             _streamManager = new RecyclableMemoryStreamManager();
-            _written = false;
         }
 
         public void Transform(string url)
@@ -78,14 +76,9 @@ namespace OptimiseImageProcessing
                 ImageHelper.TransformImage(graphics, scaledImage, originalImage);
                 // upload scaledImage to AWS S3
                
-                if (_written == false)
+                using (var fileStream = File.Create(@"..\..\v3.jpg"))
                 {
-                    using (var fileStream = File.Create(@"..\..\v3.jpg"))
-                    {
-                        scaledImage.Save(fileStream, ImageFormat.Jpeg);
-                    }
-
-                    _written = true;
+                    scaledImage.Save(fileStream, ImageFormat.Jpeg);
                 }
             }
         }

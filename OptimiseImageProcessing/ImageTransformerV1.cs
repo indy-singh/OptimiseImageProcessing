@@ -22,13 +22,6 @@ namespace OptimiseImageProcessing
     /// </summary>
     public class ImageTransformerV1 : IImageTransformer
     {
-        private bool _written;
-
-        public ImageTransformerV1()
-        {
-            _written = false;
-        }
-
         public void Transform(string url)
         {
             var bytes = GetImageFromUrl(url);
@@ -47,14 +40,9 @@ namespace OptimiseImageProcessing
 
                 // upload scaledImage to AWS S3
 
-                if (_written == false)
+                using (var fileStream = File.Create(@"..\..\v1.jpg"))
                 {
-                    using (var fileStream = File.Create(@"..\..\v1.jpg"))
-                    {
-                        scaledImage.Save(fileStream, ImageFormat.Jpeg);
-                    }
-
-                    _written = true;
+                    scaledImage.Save(fileStream, ImageFormat.Jpeg);
                 }
             }
         }
