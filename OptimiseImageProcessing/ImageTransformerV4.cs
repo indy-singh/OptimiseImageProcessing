@@ -7,9 +7,9 @@ namespace OptimiseImageProcessing
 {
     /// <summary>
     /// Stats:-
-    ///     Took: 2,313 ms
-    ///     Allocated: 137,277 kb
-    ///     Peak Working Set: 36,060 kb
+    ///     Took: 1,672 ms
+    ///     Allocated: 135,876 kb
+    ///     Peak Working Set: 35,596 kb
     ///     Gen 0 collections: 32
     ///     Gen 1 collections: 2
     ///     Gen 2 collections: 1
@@ -82,6 +82,7 @@ namespace OptimiseImageProcessing
                         ResizeMode = CropScaleMode.Max,
                         SaveFormat = FileFormat.Jpeg,
                         JpegQuality = 70,
+                        HybridMode = HybridScaleMode.Turbo
                     });
                 }
 
