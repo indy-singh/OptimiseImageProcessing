@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 
 namespace OptimiseImageProcessing
@@ -19,6 +21,13 @@ namespace OptimiseImageProcessing
     /// </summary>
     public class ImageTransformerV2 : IImageTransformer
     {
+        private bool _written;
+
+        public ImageTransformerV2()
+        {
+            _written = false;
+        }
+
         public void Transform(string url)
         {
             var request = WebRequest.CreateHttp(url);
@@ -32,7 +41,18 @@ namespace OptimiseImageProcessing
             using (var graphics = Graphics.FromImage(scaledImage))
             {
                 ImageHelper.TransformImage(graphics, scaledImage, originalImage);
+
                 // upload scaledImage to AWS S3
+
+                if (_written == false)
+                {
+                    using (var fileStream = File.Create(@"..\..\v2.jpg"))
+                    {
+                        scaledImage.Save(fileStream, ImageFormat.Jpeg);
+                    }
+
+                    _written = true;
+                }
             }
         }
     }
