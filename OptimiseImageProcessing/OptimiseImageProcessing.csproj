@@ -58,9 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageHelper.cs" />
-    <Compile Include="ImageTransformerV2.cs" />
     <Compile Include="ImageTransformerV1.cs" />
-    <Compile Include="ImageTransformerV20.cs" />
+    <Compile Include="ImageTransformerV2.cs" />
     <Compile Include="ImageTransformerV40.cs" />
     <Compile Include="ImageTransformerV30.cs" />
     <Compile Include="Program.cs" />

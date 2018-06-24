@@ -26,12 +26,6 @@ namespace OptimiseImageProcessing
                     var transformer = new ImageTransformerV2();
                     Transform(transformer, Url);
                 },
-                ["20"] = () =>
-                {
-                    Console.WriteLine("Version 20");
-                    var transformer = new ImageTransformerV20();
-                    Transform(transformer, Url);
-                },
                 ["30"] = () =>
                 {
                     Console.WriteLine("Version 30");
