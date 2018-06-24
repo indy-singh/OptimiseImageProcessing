@@ -26,23 +26,21 @@ namespace OptimiseImageProcessing
         {
             var bytes = GetImageFromUrl(url);
 
-            if (CanCreateImageFrom(bytes) == false)
+            if (CanCreateImageFrom(bytes))
             {
-                return;
-            }
-
-            using (var stream = new MemoryStream(bytes))
-            using (var originalImage = Image.FromStream(stream))
-            using (var scaledImage = ImageHelper.Scale(originalImage, 320, 240))
-            using (var graphics = Graphics.FromImage(scaledImage))
-            {
-                ImageHelper.TransformImage(graphics, scaledImage, originalImage);
-
-                // upload scaledImage to AWS S3
-
-                using (var fileStream = File.Create(@"..\..\v1.jpg"))
+                using (var stream = new MemoryStream(bytes))
+                using (var originalImage = Image.FromStream(stream))
+                using (var scaledImage = ImageHelper.Scale(originalImage, 320, 240))
+                using (var graphics = Graphics.FromImage(scaledImage))
                 {
-                    scaledImage.Save(fileStream, ImageFormat.Jpeg);
+                    ImageHelper.TransformImage(graphics, scaledImage, originalImage);
+
+                    // upload scaledImage to AWS S3 in production, in the test harness write to disk
+
+                    using (var fileStream = File.Create(@"..\..\v1.jpg"))
+                    {
+                        scaledImage.Save(fileStream, ImageFormat.Jpeg);
+                    }
                 }
             }
         }

@@ -74,8 +74,8 @@ namespace OptimiseImageProcessing
             using (var graphics = Graphics.FromImage(scaledImage))
             {
                 ImageHelper.TransformImage(graphics, scaledImage, originalImage);
-                // upload scaledImage to AWS S3
-               
+                // upload scaledImage to AWS S3 in production, in the test harness write to disk
+
                 using (var fileStream = File.Create(@"..\..\v3.jpg"))
                 {
                     scaledImage.Save(fileStream, ImageFormat.Jpeg);
