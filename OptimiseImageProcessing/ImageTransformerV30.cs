@@ -1,29 +1,30 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using Microsoft.IO;
-using PhotoSauce.MagicScaler;
 
 namespace OptimiseImageProcessing
 {
     /// <summary>
     /// Stats:-
-    ///     Took: 1,672 ms
-    ///     Allocated: 135,876 kb
-    ///     Peak Working Set: 35,596 kb
-    ///     Gen 0 collections: 32
+    ///     Took: 7,688 ms
+    ///     Allocated: 125,739 kb
+    ///     Peak Working Set: 71,140 kb
+    ///     Gen 0 collections: 29
     ///     Gen 1 collections: 2
     ///     Gen 2 collections: 1
     ///
     /// dotTrace:-
-    ///     Total RAM: 165 MB
-    ///     SOH:       162 MB
-    ///     LOH:       2.8 MB
+    ///     Total RAM: 152 MB
+    ///     SOH:       150 MB
+    ///     LOH:       1.6 MB
     /// </summary>
-    public class ImageTransformerV4 : IImageTransformer
+    public class ImageTransformerV30 : IImageTransformer
     {
         private readonly RecyclableMemoryStreamManager _streamManager;
 
-        public ImageTransformerV4()
+        public ImageTransformerV30()
         {
             _streamManager = new RecyclableMemoryStreamManager();
         }
@@ -57,7 +58,7 @@ namespace OptimiseImageProcessing
                 }
                 else
                 {
-                    bufferSize = (int)response.ContentLength;
+                    bufferSize = (int) response.ContentLength;
                 }
 
                 // close the http response stream asap, we only need the contents, we don't need to keep it open
@@ -67,26 +68,17 @@ namespace OptimiseImageProcessing
                 }
             }
 
-            borrowedStream.Position = 0L;
-
-            MagicImageProcessor.EnableSimd = false;
-            MagicImageProcessor.EnablePlanarPipeline = true;
-
             using (borrowedStream)
+            using (var originalImage = Image.FromStream(borrowedStream))
+            using (var scaledImage = ImageHelper.Scale(originalImage, 320, 240))
+            using (var graphics = Graphics.FromImage(scaledImage))
             {
+                ImageHelper.TransformImage(graphics, scaledImage, originalImage);
                 // upload scaledImage to AWS S3 in production, in the test harness write to disk
 
-                using (var fileStream = File.Create(@"..\..\v4.jpg"))
+                using (var fileStream = File.Create(@"..\..\v30.jpg"))
                 {
-                    MagicImageProcessor.ProcessImage(borrowedStream, fileStream, new ProcessImageSettings()
-                    {
-                        Width = 320,
-                        Height = 240,
-                        ResizeMode = CropScaleMode.Max,
-                        SaveFormat = FileFormat.Jpeg,
-                        JpegQuality = 70,
-                        HybridMode = HybridScaleMode.Turbo
-                    });
+                    scaledImage.Save(fileStream, ImageFormat.Jpeg);
                 }
             }
         }
