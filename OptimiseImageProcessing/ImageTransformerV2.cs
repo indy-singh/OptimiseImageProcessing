@@ -37,7 +37,7 @@ namespace OptimiseImageProcessing
 
                 // upload scaledImage to AWS S3 in production, in the test harness write to disk
 
-                using (var fileStream = File.Create(@"..\..\v20.jpg"))
+                using (var fileStream = File.Create(@"..\..\v2.jpg"))
                 {
                     scaledImage.Save(fileStream, ImageFormat.Jpeg);
                 }
