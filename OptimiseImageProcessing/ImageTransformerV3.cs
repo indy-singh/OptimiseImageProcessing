@@ -69,7 +69,7 @@ namespace OptimiseImageProcessing
             }
 
             using (borrowedStream)
-            using (var originalImage = Image.FromStream(borrowedStream))
+            using (var originalImage = Image.FromStream(borrowedStream, false, false))
             using (var scaledImage = ImageHelper.Scale(originalImage, 320, 240))
             using (var graphics = Graphics.FromImage(scaledImage))
             {
