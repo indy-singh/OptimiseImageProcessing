@@ -37,11 +37,17 @@ namespace OptimiseImageProcessing
                     Console.WriteLine("Version 4");
                     var transformer = new ImageTransformerV4();
                     Transform(transformer, Url);
+                },
+                ["5"] = () =>
+                {
+                    Console.WriteLine("Version 5");
+                    var transformer = new ImageTransformerV5();
+                    Transform(transformer, Url);
                 }
             };
 
 #if DEBUG
-            dict["1"]();
+            dict["5"]();
             Environment.Exit(0);
 #endif
 
